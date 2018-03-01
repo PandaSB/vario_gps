@@ -123,7 +123,7 @@ void Getinfo(void)
   D1 = 0;
   D2 = 0;
 #ifdef MS5611_VARIO
-  Pressure = ms5611.readPressure(); 
+  Pressure = ms5611.getPressure(); 
 #else
   bmp085.calcTruePressure(&Pressure);                                   //get one sample from BMP085 in every loop
 #endif
@@ -152,7 +152,7 @@ void Getinfo(void)
   if (millis() >= (get_time1 + 10000))    //every second get temperature
   {
 #ifdef MS5611_VARIO
-    Temperature =  (ms5611.readTemperature()) ;    
+    Temperature =  (ms5611.getTemperature()) ;    
 #else
     bmp085.getTemperature(&Temperature(); // get temperature in celsius from time to time, we have to divide that by 10 to get XY.Z
 #endif 
@@ -170,7 +170,8 @@ void Getinfo(void)
 void BuildVarioString (char * szVarioData)
 {
   unsigned int checksum_end, ai, bi;                                               // Calculating checksum for data string
-  sprintf (szVarioData,"$LK8EX1,%d,%s,%s,%d,%d,",average_pressure,dtostrf(Altitude, 0, 0, altitude_arr),dtostrf((vario * 100), 0, 0, vario_arr),my_temperature,Battery_Vcc);
+  
+  sprintf (szVarioData,"$LK8EX1,%ld,%s,%s,%d,%d,",average_pressure,dtostrf(Altitude, 0, 0, altitude_arr),dtostrf((vario * 100), 0, 0, vario_arr),my_temperature,Battery_Vcc);
   for (checksum_end = 0, ai = 0; ai < strlen(szVarioData); ai++)
     {
       bi = (unsigned char)szVarioData[ai];
